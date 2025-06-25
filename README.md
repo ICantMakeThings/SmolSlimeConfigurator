@@ -12,3 +12,5 @@ Pure Simple UI Configurator for SlimeVR Smol Slimes (Unofficial)
 
 Compiled for Linux+Windows and raw .py file avalable, .exe has not been tested. but its the same code, must work, righttttttt?
 If not, open a issue.
+
+As of rn, v2, windows dont work with flashing.
