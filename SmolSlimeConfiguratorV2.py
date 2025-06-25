@@ -258,7 +258,7 @@ def download_firmware():
     send_command("clear")
     time.sleep(0.5)
     send_command("dfu")
-    label_matches = ["NICENANO", "UF2"]
+    label_matches = ["NICENANO", "UF2", "XIAO-SENSE", "zephyr"]
     append_text(f"Waiting up to 10 seconds for usb to appear. If the drive's name is something other than {', '.join(label_matches)}, please post an issue https://github.com/ICantMakeThings/SmolSlimeConfigurator, mentioning the name of the usb drive, precisely.\n")
     time.sleep(10)  # Sleep to wait for USB drive to pop up
 
