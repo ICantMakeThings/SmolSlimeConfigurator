@@ -14,6 +14,7 @@ There are 2 options to run the Configurator:
 - Configure the trackers via simple buttons 
 - Tooltips explaining breafly what each button does
 - Auto Firmware updater, Only required to plug your tracker in via USB
+- Firmware list fetches latest daily builds 
 - Linux and Windows (Untested Mac) support.
 
 # Instructions
