@@ -48,4 +48,6 @@ Official SmolSlime docs [Here](https://docs.slimevr.dev/smol-slimes/)
 
 # Odd notes:
 
+If you want to feel safe running this program, read the Python code and run it from the .py
+
 If a tracker has old pair data it wont connect to your reciever, plug your tracker in and "Clear Con. data"
