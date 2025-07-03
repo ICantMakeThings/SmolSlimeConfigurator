@@ -51,7 +51,3 @@ Official SmolSlime docs [Here](https://docs.slimevr.dev/smol-slimes/)
 If you want to feel safe running this program, read the Python code and run it from the .py
 
 If a tracker has old pair data it wont connect to your reciever, plug your tracker in and "Clear Con. data"
-
-Very important announcement (yes yes, at the bottom):
-If when your tracker goes into DFU (so the storage drive pops up) the program will only work with:
-["NICENANO", "UF2", "XIAO-SENSE", "zephyr"] thease names, if your drive is called something diferent, please tell me asap
