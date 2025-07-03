@@ -3,11 +3,6 @@ Pure Simple UI Configurator for SlimeVR Smol Slimes (Unofficial)
 
 ![Screenshot from 2025-06-25 18-38-02](https://github.com/user-attachments/assets/45befd55-a713-4ea4-a25e-0064ceee10c3)
 
-# Download
-There are 2 options to run the Configurator:
-- Single file executable from [Releases](https://github.com/ICantMakeThings/SmolSlimeConfigurator/releases) (Windows + Linux)
-- Python file from the uploaded files above.
-
 # Features
 
 - Easy UI
@@ -16,6 +11,11 @@ There are 2 options to run the Configurator:
 - Auto Firmware updater, Only required to plug your tracker in via USB
 - Firmware list fetches latest daily builds 
 - Linux and Windows (Untested Mac) support.
+
+# Download
+There are 2 options to run the Configurator:
+- Single file executable from [Releases](https://github.com/ICantMakeThings/SmolSlimeConfigurator/releases) (Windows + Linux)
+- Python file from the uploaded files above.
 
 # Instructions
 **Note: There is a [Video](https://youtu.be/2PHelwy7Rcs) explaining usage.**
@@ -51,3 +51,7 @@ Official SmolSlime docs [Here](https://docs.slimevr.dev/smol-slimes/)
 If you want to feel safe running this program, read the Python code and run it from the .py
 
 If a tracker has old pair data it wont connect to your reciever, plug your tracker in and "Clear Con. data"
+
+Very important announcement (yes yes, at the bottom):
+If when your tracker goes into DFU (so the storage drive pops up) the program will only work with:
+["NICENANO", "UF2", "XIAO-SENSE", "zephyr"] thease names, if your drive is called something diferent, please tell me asap
