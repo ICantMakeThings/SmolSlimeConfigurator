@@ -21,7 +21,7 @@ There are 2 options to run the Configurator:
 **Note: There is a [Video](https://youtu.be/2PHelwy7Rcs) explaining usage.**
 ## **First install**
 
-+ Plug in the tracker or reciever, hold one side of a wire on rst pin ![image](https://github.com/user-attachments/assets/7cdaae27-21f9-428f-9327-d39bbf8dabc2)
++ Plug in the tracker or reciever, hold one side of a wire on rst pin ![image](https://github.com/user-attachments/assets/7cdaae27-21f9-428f-9327-d39bbf8dabc2) (4th pin down from where B+ pin is)
 and doubble tap gnd (usbc connector on the Nice!Nano)![image](https://github.com/user-attachments/assets/c1efbc20-bb2f-4fd8-9ecd-8869648ebf17)
 + Press "↻" refresh, then select the port from the dropdown menu on the left of the refresh button, then press "Connect"
 + Select the version of hardware from the dropdown menu called "Select Firmware", press "⬇ Firmware",  Wait ~20 seconds, the tracker will flash.
