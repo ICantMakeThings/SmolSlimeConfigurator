@@ -14,7 +14,7 @@ Pure Simple UI Configurator for SlimeVR Smol Slimes (Unofficial)
 
 # Download
 There are 2 options to run the Configurator:
-- Single file executable from [Releases](https://github.com/ICantMakeThings/SmolSlimeConfigurator/releases) (Windows + Linux + macOS 14+)
+- Single file executable from [Releases](https://github.com/ICantMakeThings/SmolSlimeConfigurator/releases) (Windows + Linux + macOS)
 - Python file from the uploaded files above.
 
 # Instructions
