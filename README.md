@@ -1,7 +1,8 @@
-# SmolSlimeConfigurator
+# SmolSlimeConfigurator <img src="icon.png" width="32" height="32" alt="SmolSlimeConfiguratorICON">
 Pure Simple UI Configurator for SlimeVR Smol Slimes (Unofficial)
 
-![Screenshot from 2025-06-25 18-38-02](https://github.com/user-attachments/assets/45befd55-a713-4ea4-a25e-0064ceee10c3)
+
+<img width="1316" height="539" alt="newyes" src="https://github.com/user-attachments/assets/ce07f8ac-0857-42c3-9a02-f86d84e19fcc" />
 
 # Features
 
