@@ -688,12 +688,25 @@ btn_send.pack(side="left", pady=5)
 
 command_entry.bind("<Return>", lambda event: send_custom_command())
 
-icon_path = os.path.join(os.path.dirname(__file__), "icon.png")
-if os.path.exists(icon_path):
+# MY GUY THE ICON IS THE MOST IMPORTANT TING
+def resource_path(relative_path):
+    """gapfpione."""
     try:
-        app.iconphoto(True, tk.PhotoImage(file=icon_path))
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
+
+if sys.platform.startswith("win"):
+    app.iconbitmap(resource_path("icon.ico"))
+elif sys.platform.startswith("linux") or sys.platform.startswith("darwin"):
+    img_path = resource_path("icon.png")
+    try:
+        img = tk.PhotoImage(file=img_path)
+        app.iconphoto(True, img)
     except Exception as e:
         print(f"boohoo.. error: {e}")
+
 
 
 # The MOST PORTAN' PART!!!
