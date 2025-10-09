@@ -14,8 +14,8 @@ import tempfile
 import json
 import webbrowser
 import re
-import hashlib
-from tkinter import colorchooser
+#import hashlib
+#from tkinter import colorchooser
 from tkinter import filedialog
 import tkinter as tk
 import queue
