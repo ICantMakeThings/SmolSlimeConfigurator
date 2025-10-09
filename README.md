@@ -52,9 +52,8 @@ Official SmolSlime docs [Here](https://docs.slimevr.dev/smol-slimes/)
 
 # Odd notes:
 
-If you want to feel safe running this program, read the Python code and run it from the .py.
-If a tracker has old pair data it wont connect to your reciever, plug your tracker in and "Clear Con. data".
-If the trackers and recievers arent on the same daily build, they will not want to connect.
-There is a [.html](https://github.com/jitingcn/SmolSlimeWebConfigurator) version of this app, and hosted on a [website](https://gh.jtcat.com/SmolSlimeConfigurator.html), made by [jitingcn](https://github.com/jitingcn)
-
-
++ If you want to feel safe running this program, read the Python code and run it from the .py.
++ If a tracker has old pair data it wont connect to your reciever, plug your tracker in and "Clear Con. data".
++ If the trackers and recievers arent on the same daily build, they will not want to connect.
++ There is a [.html](https://github.com/jitingcn/SmolSlimeWebConfigurator) version of this app, and hosted on a [website](https://gh.jtcat.com/SmolSlimeConfigurator.html), made by [jitingcn](https://github.com/jitingcn).
++ You cant flash Nordic-eByte/Holyiot Receivers
