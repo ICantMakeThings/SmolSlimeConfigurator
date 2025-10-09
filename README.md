@@ -57,3 +57,6 @@ Official SmolSlime docs [Here](https://docs.slimevr.dev/smol-slimes/)
 + If the trackers and recievers arent on the same daily build, they will not want to connect.
 + There is a [.html](https://github.com/jitingcn/SmolSlimeWebConfigurator) version of this app, and hosted on a [website](https://gh.jtcat.com/SmolSlimeConfigurator.html), made by [jitingcn](https://github.com/jitingcn).
 + You cant flash Nordic-eByte/Holyiot Receivers
+
++ Building it looks like: `pyinstaller --onefile --windowed --icon=icon.png --add-data "icon.png:." SmolSlimeConfiguratorVx.py`
+
