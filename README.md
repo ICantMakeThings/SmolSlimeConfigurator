@@ -59,5 +59,5 @@ Official SmolSlime docs [Here](https://docs.slimevr.dev/smol-slimes/)
 + There is a [.html](https://github.com/jitingcn/SmolSlimeWebConfigurator) version of this app, and hosted on a [website](https://gh.jtcat.com/SmolSlimeConfigurator.html), made by [jitingcn](https://github.com/jitingcn).
 + You cant flash Nordic-eByte/Holyiot Receivers
 + Looking for old source code? look [here](https://github.com/ICantMakeThings/SmolSlimeConfigurator/tree/OldVersions)
-+ Android Soon™
++ [Android Soon™](https://youtube.com/shorts/Yr7VGpSUU6w)
 
