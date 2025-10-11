@@ -18,7 +18,7 @@ Pure Simple UI Configurator for SlimeVR Smol Slimes (Unofficial)
 
 # Download
 There are 2 options to run the Configurator:
-- Single file executable from [Releases](https://github.com/ICantMakeThings/SmolSlimeConfigurator/releases) (Windows + Linux + macOS)
+- Single file executable from [Releases](https://github.com/ICantMakeThings/SmolSlimeConfigurator/releases) (Windows, Linux, macOS, Android)
 - Python file from the uploaded files above.
 - Building it from source looks like: `pyinstaller --onefile --windowed --icon=icon.png --add-data "icon.png:." SmolSlimeConfiguratorVx.py`
 
@@ -59,5 +59,4 @@ Official SmolSlime docs [Here](https://docs.slimevr.dev/smol-slimes/)
 + There is a [.html](https://github.com/jitingcn/SmolSlimeWebConfigurator) version of this app, and hosted on a [website](https://gh.jtcat.com/SmolSlimeConfigurator.html), made by [jitingcn](https://github.com/jitingcn).
 + You cant flash Nordic-eByte/Holyiot Receivers
 + Looking for old source code? look [here](https://github.com/ICantMakeThings/SmolSlimeConfigurator/tree/OldVersions)
-+ [Android Soon™](https://youtube.com/shorts/Yr7VGpSUU6w)
 
