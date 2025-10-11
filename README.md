@@ -13,7 +13,7 @@ Pure Simple UI Configurator for SlimeVR Smol Slimes (Unofficial)
 - **Always up to date** — Firmware list automatically fetches the latest daily builds from GitHub.
 - **Custom firmware support** — flash your own `.uf2` file with a single click.
 - **Favorites system** — star your most-used firmware versions by right clicking.
-- **Cross-platform** — works seamlessly on **Windows**, **Linux**, and **macOS**.
+- **Cross-platform** — works seamlessly on **Windows**, **Linux**, **macOS**, and **Android**.
 - **Theme customization** — switch between **light/dark mode** and choose your favorite accent color.
 
 # Download
