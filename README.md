@@ -23,7 +23,8 @@ There are 2 options to run the Configurator:
 - Building it from source looks like: `pyinstaller --onefile --windowed --icon=icon.png --add-data "icon.png:." SmolSlimeConfiguratorVx.py`
 
 # Instructions
-**Note: There is a [Video](https://youtu.be/2PHelwy7Rcs) explaining usage.**
+**Note: There is a [Video](https://youtu.be/2PHelwy7Rcs) explaining usage, and [This Video](https://www.youtube.com/watch?v=ENINHh4L8tk) for android usage explenation**
+
 ## **First install**
 
 + Plug in the tracker or reciever, hold one side of a wire on rst pin ![image](https://github.com/user-attachments/assets/7cdaae27-21f9-428f-9327-d39bbf8dabc2) (4th pin down from where B+ pin is)
