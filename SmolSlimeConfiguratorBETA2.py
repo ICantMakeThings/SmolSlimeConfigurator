@@ -525,18 +525,40 @@ def flash_hex_firmware(file_path):
     append_text(f"Starting Flash on port: {port}...\n")
 
     try:
+        dfu_package = os.path.splitext(file_path)[0] + "_dfu_package.zip"
+
+        append_text("Generating DFU package...\n")
+        subprocess.run([
+            "nrfutil", "pkg", "generate",
+            "--hw-version", "52",
+            "--application-version", "1",
+            "--sd-req", "0x00",
+            "--application", file_path,
+            dfu_package
+        ], check=True)
+
+        append_text("Flashing DFU package via serial...\n")
         subprocess.run([
             "nrfutil", "dfu", "serial",
-            "--package", file_path,
+            "--package", dfu_package,
             "--port", port,
-            "--baudrate", "115200"
+            "--baud-rate", "115200"
         ], check=True)
+
         append_text("YAY! FW Flashed!!!\n", "success")
         progress_bar.set(1.0)
+
     except FileNotFoundError:
         append_text("Error 420: run 'pip install nrfutil'.\n", "error")
     except subprocess.CalledProcessError as e:
         append_text(f"Error code: {e}\n", "error")
+    finally:
+        try:
+            if os.path.exists(dfu_package):
+                os.remove(dfu_package)
+        except Exception:
+            pass
+
 
 
 # Download the firmware once user selected and pressed the Firmware button,
