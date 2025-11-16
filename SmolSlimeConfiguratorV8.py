@@ -765,7 +765,7 @@ ui_btn(receiver_btn_frame, "⎋ Pairing Mode", lambda: send_command("exit"), "Ex
 settings_tab = tab_view.add("Settings")
 settings_frame = ctk.CTkFrame(settings_tab)
 settings_frame.pack(padx=10, pady=10, fill="both", expand=True)
-version_label = ctk.CTkLabel(settings_frame, text="SmolSlimeConfigurator Version 7", text_color="gray")
+version_label = ctk.CTkLabel(settings_frame, text="SmolSlimeConfigurator Version 8", text_color="gray")
 version_label.pack(anchor="ne", padx=10, pady=5)
 
 def toggle_theme(choice):
