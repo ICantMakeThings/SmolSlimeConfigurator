@@ -111,7 +111,7 @@ def fetch_latest_firmware_assets():
 
 # Start base window, size & name
 app = ctk.CTk()
-app.title("SmolSlime Configurator")
+app.title("SmolSlimeConfigurator")
 app.geometry("1010x500")
 
 # Overdone tooltip overlay
