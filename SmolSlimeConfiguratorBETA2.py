@@ -111,7 +111,7 @@ def fetch_latest_firmware_assets():
 
 # Start base window, size & name
 app = ctk.CTk()
-app.title("SmolSlime Configurator")
+app.title("SmolSlimeConfigurator")
 app.geometry("1010x500")
 
 # Overdone tooltip overlay
@@ -470,12 +470,27 @@ def open_firmware_popup():
 
     search_var.trace_add("write", on_paste_url)
 
-    def _on_mousewheel(event):
-        scroll_frame._parent_canvas.yview_scroll(-1 * (event.delta // 120), "units")
+    def scrollf(event):
+        try:
+            scroll_frame._on_mousewheel(event)
+        except Exception:
+            pass
+        if event.num == 4:
+            try:
+                if hasattr(scroll_frame, "_parent_canvas") and scroll_frame._parent_canvas:
+                    scroll_frame._parent_canvas.yview_scroll(-1, "units")
+            except Exception:
+                pass
+        elif event.num == 5:
+            try:
+                if hasattr(scroll_frame, "_parent_canvas") and scroll_frame._parent_canvas:
+                    scroll_frame._parent_canvas.yview_scroll(1, "units")
+            except Exception:
+                pass
 
-    scroll_frame.bind_all("<MouseWheel>", _on_mousewheel)
-    scroll_frame.bind_all("<Button-4>", lambda e: scroll_frame._parent_canvas.yview_scroll(-1, "units"))
-    scroll_frame.bind_all("<Button-5>", lambda e: scroll_frame._parent_canvas.yview_scroll(1, "units"))
+    scroll_frame.bind_all("<MouseWheel>", scrollf)
+    scroll_frame.bind_all("<Button-4>", scrollf)
+    scroll_frame.bind_all("<Button-5>", scrollf)
 
     update_list()
     popup.wait_visibility()
@@ -510,9 +525,16 @@ def animate_progress(target, step=0.02, interval=50):
         if target == 1.0:
             app.after(2000, lambda: progress_bar.pack_forget())
 
+def get_nrfutil_path():
+    if getattr(sys, 'frozen', False):
+        base_path = sys._MEIPASS
+        return os.path.join(base_path, "nrfutil")
+    else:
+        return "nrfutil"
+
 # HEX flashing usin command thingy, idk if works
 def flash_hex_firmware(file_path):
-    global ser
+    global ser, connected
     if not ser or not ser.is_open:
         append_text("Device not connected.\n", "error")
         return
@@ -523,27 +545,31 @@ def flash_hex_firmware(file_path):
 
     port = ser.port
     append_text(f"Starting Flash on port: {port}...\n")
+    ser.close()
+    ser = None
+    connected = False
+    nrfutil_cmd = get_nrfutil_path()
 
     try:
         dfu_package = os.path.splitext(file_path)[0] + "_dfu_package.zip"
 
         append_text("Generating DFU package...\n")
         subprocess.run([
-            "nrfutil", "pkg", "generate",
+            nrfutil_cmd, "pkg", "generate",
             "--hw-version", "52",
             "--application-version", "1",
             "--sd-req", "0x00",
             "--application", file_path,
             dfu_package
-        ], check=True)
+        ], check=True, shell=False)
 
         append_text("Flashing DFU package via serial...\n")
         subprocess.run([
-            "nrfutil", "dfu", "serial",
+            nrfutil_cmd, "dfu", "serial",
             "--package", dfu_package,
             "--port", port,
             "--baud-rate", "115200"
-        ], check=True)
+        ], check=True, shell=False)
 
         append_text("YAY! FW Flashed!!!\n", "success")
         progress_bar.set(1.0)
