@@ -6,13 +6,12 @@ Pure Simple UI Configurator for SlimeVR Smol Slimes (Unofficial)
 
 # Features
 
-- **Easy-to-use interface** — clean, modern, and simple to navigate.
+- **Easy-to-use interface** — clean, modern, and simple to use & Helpful tooltips.
 - **Effortless configuration** — one-click buttons for calibration, pairing, and more.
-- **Helpful tooltips** — hover over any button to see what it does, perfect for beginners.
 - **Automatic firmware updater** — just plug your tracker in via USB, select your firmware type, and flash the latest build instantly.
 - **Always up to date** — the firmware list automatically fetches the latest daily builds from GitHub.
-- **Custom firmware support** — flash your own `.uf2` file with a single click.
-- **Favorites system** — star your most-used firmware versions by right-clicking.
+- **Custom firmware support** — flash your own `.uf2` or `.hex` files no problem.
+- **Favorites system** — star your most-used firmware versions by Right-Clicking (Middle-Clicking on Mac).
 - **Cross-platform** — available for **Windows**, **Linux**, **macOS**, and **Android**.
 - **Theme customization** — switch between **light/dark mode** and choose your favorite accent colour.
 
@@ -22,8 +21,9 @@ There are 2 options to run the Configurator:
 - Python file from the uploaded files above.
 - To build it from source, run:
 ```bash
-pyinstaller --onefile --windowed --icon=icon.png --add-data "icon.png:." SmolSlimeConfiguratorVx.py
+pyinstaller --onefile --windowed --icon=icon.png --add-data "icon.png:." --add-binary "/Location/To/UR/NameOfVenv/bin/nrfutil:." SmolSlimeConfiguratorV8.py
 ```
+*Note you NEED to use a venv, NEED to use python 3.10.xx & change the .png to .icns on mac and .ico on windows*
 
 # Instructions
 **Note:** There is a [video tutorial](https://youtu.be/2PHelwy7Rcs) explaining general usage, and [this video](https://www.youtube.com/watch?v=ENINHh4L8tk) covers **Android usage** in detail.
@@ -60,6 +60,5 @@ Official SmolSlime docs [Here](https://docs.slimevr.dev/smol-slimes/)
 + If a tracker has old pair data it wont connect to your reciever, plug your tracker in and "Clear Con. data".
 + If the trackers and recievers arent on the same daily build, they will not want to connect.
 + There is a [.html](https://github.com/jitingcn/SmolSlimeWebConfigurator) version of this app, and hosted on a [website](https://gh.jtcat.com/SmolSlimeConfigurator.html), made by [jitingcn](https://github.com/jitingcn).
-+ You cant flash Nordic-eByte/Holyiot Receivers
 + Looking for old source code? look [here](https://github.com/ICantMakeThings/SmolSlimeConfigurator/tree/OldVersions)
 
