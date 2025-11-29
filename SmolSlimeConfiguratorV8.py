@@ -14,32 +14,16 @@ import tempfile
 import json
 import webbrowser
 import re
-#import hashlib
-#from tkinter import colorchooser
 from tkinter import filedialog
 import tkinter as tk
 import queue
-
 # For safety...
 serial_queue = queue.Queue()
 ser_lock = threading.Lock()
 
-# Wanted to add a funny meow when you press the meow button but i couldnt pack it all into a single .exe so no funny meow for you :<
-#import pygame
-
-#def resource_path(relative_path):
-#    try:
-#        base_path = sys._MEIPASS
-#    except Exception:
-#        base_path = os.path.abspath(".")
-#    return os.path.join(base_path, relative_path)
-
 # Set theme
 ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("dark-blue")
-
-#pygame.mixer.init()
-#meow_sound = pygame.mixer.Sound("meow.wav")
 
 # Set variables and start serial
 ser = None
@@ -111,7 +95,7 @@ def fetch_latest_firmware_assets():
 
 # Start base window, size & name
 app = ctk.CTk()
-app.title("SmolSlimeConfigurator")
+app.title("SmolSlime Configurator")
 app.geometry("1010x500")
 
 # Overdone tooltip overlay
@@ -304,9 +288,6 @@ def disconnect_serial():
     connected = False
     status_label.configure(text="Not connected", text_color="red")
 
-
-
-
 # Let the code add MORE!! (more lines of serial that is)
 def append_text(text, color=None):
     console.configure(state="normal")
@@ -329,9 +310,6 @@ def append_text(text, color=None):
 
     console.update_idletasks()
     console.configure(state="disabled")
-
-
-
 
 # The thing that asks for the custom .U2F
 def on_tracker_change(choice):
@@ -385,7 +363,7 @@ def open_firmware_popup():
     popup.geometry("300x400")
     popup.transient(app)
 
-    # R-Click Hint
+    # R-Click Hint (Middle-Click on mac)
     if not settings.get("seen_favorite_hint", False):
         hint_popup = ctk.CTkToplevel(popup)
         hint_popup.title("Tip")
@@ -394,7 +372,7 @@ def open_firmware_popup():
 
         hint_label = ctk.CTkLabel(
             hint_popup,
-            text="Right-click firmware to star it!\nFavorites appear first and in gold",
+            text="Middle-click firmware to star it!\nFavorites appear first and in gold",
             justify="center",
             wraplength=220
         )
@@ -406,7 +384,9 @@ def open_firmware_popup():
         settings["seen_favorite_hint"] = True
         save_settings()
 
-        hint_popup.after(50, lambda: hint_popup.grab_set())
+        hint_popup.wait_visibility()
+        hint_popup.grab_set()
+
 
     def open_docs():
         webbrowser.open("https://docs.slimevr.dev/smol-slimes/firmware/smol-pre-compiled-firmware.html#-tracker")
@@ -471,26 +451,28 @@ def open_firmware_popup():
     search_var.trace_add("write", on_paste_url)
 
     def scrollf(event):
-        try:
-            scroll_frame._on_mousewheel(event)
-        except Exception:
-            pass
-        if event.num == 4:
-            try:
-                if hasattr(scroll_frame, "_parent_canvas") and scroll_frame._parent_canvas:
-                    scroll_frame._parent_canvas.yview_scroll(-1, "units")
-            except Exception:
-                pass
-        elif event.num == 5:
-            try:
-                if hasattr(scroll_frame, "_parent_canvas") and scroll_frame._parent_canvas:
-                    scroll_frame._parent_canvas.yview_scroll(1, "units")
-            except Exception:
-                pass
+        canvas = getattr(scroll_frame, "_parent_canvas", None)
+        if not canvas:
+            return
 
-    scroll_frame.bind_all("<MouseWheel>", scrollf)
-    scroll_frame.bind_all("<Button-4>", scrollf)
-    scroll_frame.bind_all("<Button-5>", scrollf)
+        if hasattr(event, "delta"):
+            if sys.platform == "darwin":
+                canvas.yview_scroll(-1 * event.delta, "units")
+            else:
+                canvas.yview_scroll(-1 * int(event.delta / 120), "units")
+        elif event.num == 4:
+            canvas.yview_scroll(-1, "units")
+        elif event.num == 5:
+            canvas.yview_scroll(1, "units")
+
+    if sys.platform == "darwin":
+        scroll_frame.bind_all("<MouseWheel>", scrollf)
+    elif sys.platform.startswith("win"):
+        scroll_frame.bind_all("<MouseWheel>", scrollf)
+    else:
+        scroll_frame.bind_all("<Button-4>", scrollf)
+        scroll_frame.bind_all("<Button-5>", scrollf)
+
 
     update_list()
     popup.wait_visibility()
@@ -527,15 +509,12 @@ def animate_progress(target, step=0.02, interval=50):
 
 def get_nrfutil_path():
     if getattr(sys, 'frozen', False):
-        base_path = sys._MEIPASS if hasattr(sys, '_MEIPASS') else os.path.dirname(os.path.abspath(sys.executable))
-        nrfutil_path = os.path.join(base_path, 'nrfutil')
-        if sys.platform == "win32" and not nrfutil_path.endswith('.exe'):
-            nrfutil_path += '.exe'
-        return nrfutil_path
+        base_path = sys._MEIPASS
+        return os.path.join(base_path, "nrfutil")
     else:
         return "nrfutil"
 
-# HEX flashing usin command thingy, idk if works
+# HEX flashing usin command thingy, Shud work gud
 def flash_hex_firmware(file_path):
     global ser, connected
     if not ser or not ser.is_open:
