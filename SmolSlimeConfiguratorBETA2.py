@@ -14,25 +14,12 @@ import tempfile
 import json
 import webbrowser
 import re
-#import hashlib
-#from tkinter import colorchooser
 from tkinter import filedialog
 import tkinter as tk
 import queue
-
 # For safety...
 serial_queue = queue.Queue()
 ser_lock = threading.Lock()
-
-# Wanted to add a funny meow when you press the meow button but i couldnt pack it all into a single .exe so no funny meow for you :<
-#import pygame
-
-#def resource_path(relative_path):
-#    try:
-#        base_path = sys._MEIPASS
-#    except Exception:
-#        base_path = os.path.abspath(".")
-#    return os.path.join(base_path, relative_path)
 
 # Set theme
 ctk.set_appearance_mode("dark")
@@ -111,7 +98,7 @@ def fetch_latest_firmware_assets():
 
 # Start base window, size & name
 app = ctk.CTk()
-app.title("SmolSlimeConfigurator")
+app.title("SmolSlime Configurator")
 app.geometry("1010x500")
 
 # Overdone tooltip overlay
@@ -406,7 +393,9 @@ def open_firmware_popup():
         settings["seen_favorite_hint"] = True
         save_settings()
 
-        hint_popup.after(50, lambda: hint_popup.grab_set())
+        hint_popup.wait_visibility()
+        hint_popup.grab_set()
+
 
     def open_docs():
         webbrowser.open("https://docs.slimevr.dev/smol-slimes/firmware/smol-pre-compiled-firmware.html#-tracker")
@@ -471,26 +460,29 @@ def open_firmware_popup():
     search_var.trace_add("write", on_paste_url)
 
     def scrollf(event):
-        try:
-            scroll_frame._on_mousewheel(event)
-        except Exception:
-            pass
-        if event.num == 4:
-            try:
-                if hasattr(scroll_frame, "_parent_canvas") and scroll_frame._parent_canvas:
-                    scroll_frame._parent_canvas.yview_scroll(-1, "units")
-            except Exception:
-                pass
-        elif event.num == 5:
-            try:
-                if hasattr(scroll_frame, "_parent_canvas") and scroll_frame._parent_canvas:
-                    scroll_frame._parent_canvas.yview_scroll(1, "units")
-            except Exception:
-                pass
+        canvas = getattr(scroll_frame, "_parent_canvas", None)
+        if not canvas:
+            return
 
-    scroll_frame.bind_all("<MouseWheel>", scrollf)
-    scroll_frame.bind_all("<Button-4>", scrollf)
-    scroll_frame.bind_all("<Button-5>", scrollf)
+        if hasattr(event, "delta"):
+            if sys.platform == "darwin":
+                canvas.yview_scroll(-1 * event.delta, "units")
+            else:
+                canvas.yview_scroll(-1 * int(event.delta / 120), "units")
+        elif event.num == 4:
+            canvas.yview_scroll(-1, "units")
+        elif event.num == 5:
+            canvas.yview_scroll(1, "units")
+
+
+    if sys.platform == "darwin":
+        scroll_frame.bind_all("<MouseWheel>", scrollf)
+    elif sys.platform.startswith("win"):
+        scroll_frame.bind_all("<MouseWheel>", scrollf)
+    else:
+        scroll_frame.bind_all("<Button-4>", scrollf)
+        scroll_frame.bind_all("<Button-5>", scrollf)
+
 
     update_list()
     popup.wait_visibility()
