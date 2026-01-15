@@ -44,6 +44,30 @@ default_settings = {
 
 settings = default_settings.copy()
 
+# Scaling for linux based on DPI
+def set_linux_scaling():
+    try:
+        import subprocess
+        dpi = subprocess.check_output(
+            ["xrdb", "-query"], stderr=subprocess.DEVNULL
+        ).decode()
+        for line in dpi.splitlines():
+            if "Xft.dpi" in line:
+                dpi_value = float(line.split()[-1])
+                scale = dpi_value / 96
+                ctk.set_widget_scaling(scale)
+                ctk.set_window_scaling(scale)
+                return
+    except Exception:
+        pass
+
+    ctk.set_widget_scaling(1.25)
+    ctk.set_window_scaling(1.25)
+
+if sys.platform.startswith("linux"):
+    set_linux_scaling()
+
+
 def load_settings():
     global settings
     if os.path.exists(SETTINGS_PATH):
@@ -61,6 +85,8 @@ load_settings()
 ctk.set_appearance_mode(settings["theme"])
 ctk.set_default_color_theme(settings["accent"])
 
+if sys.platform.startswith("linux"):
+    set_linux_scaling()
 
 
 # Pull data from latest releases + file browser
@@ -630,22 +656,33 @@ def download_firmware():
 
     mount_point = None
     system = platform.system()
-    try:
-        candidate_paths = []
+    candidate_paths = []
 
+    try:
         if system == "Windows":
             import win32api
-            drives = win32api.GetLogicalDriveStrings().split('\000')[:-1]
-            candidate_paths = drives
+            candidate_paths = win32api.GetLogicalDriveStrings().split('\000')[:-1]
 
         elif system == "Darwin":
-            candidate_paths = [os.path.join("/Volumes", d) for d in os.listdir("/Volumes")]
+            candidate_paths = [
+                os.path.join("/Volumes", d)
+                for d in os.listdir("/Volumes")
+            ]
 
         elif system == "Linux":
-            media_root = "/media"
-            for root, dirs, _ in os.walk(media_root):
-                for d in dirs:
-                    candidate_paths.append(os.path.join(root, d))
+            mount_roots = [
+                "/run/media",
+                "/media",
+                "/mnt"
+            ]
+
+            for media_root in mount_roots:
+                if not os.path.isdir(media_root):
+                    continue
+
+                for root, dirs, _ in os.walk(media_root):
+                    for d in dirs:
+                        candidate_paths.append(os.path.join(root, d))
 
         for path in candidate_paths:
             try:
@@ -654,6 +691,7 @@ def download_firmware():
                     break
             except Exception:
                 continue
+
 
         if mount_point and os.path.isdir(mount_point):
             dest = os.path.join(mount_point, os.path.basename(local_path))
@@ -744,13 +782,18 @@ ui_btn(receiver_btn_frame, "⎋ Pairing Mode", lambda: send_command("exit"), "Ex
 settings_tab = tab_view.add("Settings")
 settings_frame = ctk.CTkFrame(settings_tab)
 settings_frame.pack(padx=10, pady=10, fill="both", expand=True)
-version_label = ctk.CTkLabel(settings_frame, text="SmolSlimeConfigurator Version 8", text_color="gray")
+version_label = ctk.CTkLabel(settings_frame, text="SmolSlimeConfigurator Version 8.1 (Linux)", text_color="gray")
 version_label.pack(anchor="ne", padx=10, pady=5)
 
 def toggle_theme(choice):
     settings["theme"] = choice
     ctk.set_appearance_mode(choice)
+
+    if sys.platform.startswith("linux"):
+        set_linux_scaling()
+
     save_settings()
+
 
 def toggle_accent(choice):
     settings["accent"] = choice
