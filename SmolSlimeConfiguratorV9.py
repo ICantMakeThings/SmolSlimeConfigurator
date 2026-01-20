@@ -855,7 +855,7 @@ elif platform_name == "Linux":
 
 version_label = ctk.CTkLabel(
     settings_frame,
-    text=f"SmolSlimeConfigurator Version 8.2 ({platform_name})",
+    text=f"SmolSlimeConfigurator Version 9 ({platform_name})",
     text_color="gray"
 )
 version_label.pack(anchor="ne", padx=10, pady=5)
