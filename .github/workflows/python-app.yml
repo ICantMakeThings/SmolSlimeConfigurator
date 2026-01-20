@@ -25,32 +25,38 @@ jobs:
     - name: Create virtual environment
       run: python -m venv venv
 
-    - name: Activate virtual environment and install dependencies
+    - name: Install dependencies
       shell: bash
       run: |
         source venv/bin/activate
         python -m pip install --upgrade pip
-        pip install pyinstaller customtkinter pyserial requests nrfutil
+        pip install pyinstaller customtkinter pyserial requests
 
     - name: Build executable with PyInstaller
       shell: bash
       run: |
         source venv/bin/activate
+
         if [[ "${{ runner.os }}" == "Windows" ]]; then
+          # Activate Windows venv (PowerShell)
           venv/Scripts/activate.ps1
           pyinstaller --onefile --windowed --icon=icon.ico \
             --add-data "icon.ico;." \
             --add-binary "venv/Scripts/nrfutil.exe;." \
             './SmolSlimeConfiguratorV8-3-7.py'
+
         elif [[ "${{ runner.os }}" == "macOS" ]]; then
           pyinstaller --onedir --windowed --icon=icon.icns \
             --add-binary "venv/bin/nrfutil:." \
             './SmolSlimeConfiguratorV8-3-7.py'
+
         else
+          # Linux
           pyinstaller --onefile --windowed --icon=icon.png \
             --add-data "icon.png:." \
             --add-binary "venv/bin/nrfutil:." \
             './SmolSlimeConfiguratorV8-3-7.py'
+        fi
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
