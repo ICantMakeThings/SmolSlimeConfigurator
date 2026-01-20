@@ -32,7 +32,21 @@ read_thread = None
 stop_read = threading.Event()
 custom_fw_path = None
 
-SETTINGS_PATH = os.path.join(tempfile.gettempdir(), "smolslime_config.json")
+# OS temp dir
+def get_settings_path():
+    if sys.platform.startswith("linux"):
+        base = os.environ.get("XDG_CONFIG_HOME", os.path.expanduser("~/.config"))
+        path = os.path.join(base, "smolslime")
+    elif sys.platform.startswith("win"):
+        path = os.path.join(os.environ.get("APPDATA", os.path.expanduser("~")), "SmolSlime")
+    else:
+        path = os.path.expanduser("~/Library/Application Support/SmolSlime")
+
+    os.makedirs(path, exist_ok=True)
+    return os.path.join(path, "config.json")
+
+SETTINGS_PATH = get_settings_path()
+
 
 default_settings = {
     "theme": "dark",
@@ -337,7 +351,6 @@ def append_text(text, color=None):
     elif color == "success":
         tag = "green"
 
-    # Check if user is at bottom
     at_bottom = console.yview()[1] == 1.0
 
     if tag:
@@ -396,13 +409,20 @@ firmware_urls = {"Custom (User provided .uf2 / .hex)": None}
 # Fill the dropdown menu with latest releases
 selected_firmware = tk.StringVar(value="Select Firmware")
 
+current_os = platform.system()
+if current_os == "Darwin":
+    mac_or_other = "Middle"
+else:
+    mac_or_other = "Right"
+    
 def open_firmware_popup():
+    fw_buttons = {}
     global firmware_urls
     popup = ctk.CTkToplevel(app)
     popup.title("Select Firmware")
     popup.geometry("300x400")
     popup.transient(app)
-
+    
     # R-Click Hint (Middle-Click on mac)
     if not settings.get("seen_favorite_hint", False):
         hint_popup = ctk.CTkToplevel(popup)
@@ -412,7 +432,7 @@ def open_firmware_popup():
 
         hint_label = ctk.CTkLabel(
             hint_popup,
-            text="Middle-click firmware to star it!\nFavorites appear first and in gold",
+            text=f"{mac_or_other} click firmware to star it!\nFavorites appear first and in gold",
             justify="center",
             wraplength=220
         )
@@ -445,21 +465,59 @@ def open_firmware_popup():
 
     scroll_frame = ctk.CTkScrollableFrame(popup, width=280, height=320)
     scroll_frame.pack(padx=10, pady=(0, 10), fill="both", expand=True)
+    canvas = scroll_frame._parent_canvas
 
+    def scrollf(event):
+        if sys.platform.startswith("linux"):
+            if event.num == 4:
+                canvas.yview_scroll(-1, "units")
+            elif event.num == 5:
+                canvas.yview_scroll(1, "units")
+        else:
+            canvas.yview_scroll(-1 * int(event.delta / 120), "units")
+
+    if sys.platform.startswith("linux"):
+        canvas.bind("<Button-4>", scrollf)
+        canvas.bind("<Button-5>", scrollf)
+    else:
+        canvas.bind("<MouseWheel>", scrollf)
+# fave ting ting
     def toggle_favorite(fw):
         favs = settings.setdefault("favorites", [])
-        if fw in favs:
+        is_fav = fw in favs
+
+        if is_fav:
             favs.remove(fw)
         else:
             favs.append(fw)
+
         save_settings()
-        update_list()
+
+        btn = fw_buttons.get(fw)
+        if not btn:
+            return
+
+        btn.configure(
+            text=("☆ " if not is_fav else "") + fw,
+            text_color="gold" if not is_fav else ctk.ThemeManager.theme["CTkButton"]["text_color"]
+        )
+
+        if not is_fav:
+            children = scroll_frame.winfo_children()
+            if children and children[0] is not btn:
+                btn.pack_forget()
+                btn.pack(fill="x", pady=2, before=children[0])
+
+            scroll_frame._parent_canvas.yview_moveto(0)
+
 
     def select_fw(fw):
         selected_firmware.set(fw)
         popup.destroy()
 
     def update_list(*args):
+        fw_buttons.clear()
+
         search_term = search_var.get().lower()
         for widget in scroll_frame.winfo_children():
             widget.destroy()
@@ -478,7 +536,12 @@ def open_firmware_popup():
                     text_color="gold" if is_fav else None
                 )
                 btn.pack(fill="x", pady=2)
+
+                # Right click (or middle click on mac)
                 btn.bind("<Button-3>", lambda e, f=fw: toggle_favorite(f))
+
+                fw_buttons[fw] = btn
+
 
     def on_paste_url(*args):
         text = search_var.get().strip()
@@ -489,34 +552,16 @@ def open_firmware_popup():
         update_list()
 
     search_var.trace_add("write", on_paste_url)
+    
+    def _on_mousewheel(event):
+        scroll_frame._parent_canvas.yview_scroll(-1 * (event.delta // 120), "units")
 
-    def scrollf(event):
-        canvas = getattr(scroll_frame, "_parent_canvas", None)
-        if not canvas:
-            return
-
-        if hasattr(event, "delta"):
-            if sys.platform == "darwin":
-                canvas.yview_scroll(-1 * event.delta, "units")
-            else:
-                canvas.yview_scroll(-1 * int(event.delta / 120), "units")
-        elif event.num == 4:
-            canvas.yview_scroll(-1, "units")
-        elif event.num == 5:
-            canvas.yview_scroll(1, "units")
-
-    if sys.platform == "darwin":
-        scroll_frame.bind_all("<MouseWheel>", scrollf)
-    elif sys.platform.startswith("win"):
-        scroll_frame.bind_all("<MouseWheel>", scrollf)
-    else:
-        scroll_frame.bind_all("<Button-4>", scrollf)
-        scroll_frame.bind_all("<Button-5>", scrollf)
-
+    scroll_frame.bind_all("<MouseWheel>", _on_mousewheel)
+    scroll_frame.bind_all("<Button-4>", lambda e: scroll_frame._parent_canvas.yview_scroll(-1, "units"))
+    scroll_frame.bind_all("<Button-5>", lambda e: scroll_frame._parent_canvas.yview_scroll(1, "units"))
 
     update_list()
-    popup.wait_visibility()
-    popup.after(50, lambda: popup.grab_set())
+    popup.after(10, lambda: popup.grab_set())
 
 # Button to open firmware popup
 firmware_button = ctk.CTkButton(
@@ -810,7 +855,7 @@ elif platform_name == "Linux":
 
 version_label = ctk.CTkLabel(
     settings_frame,
-    text=f"SmolSlimeConfigurator (Built from Source) Version 8.2 ({platform_name})",
+    text=f"SmolSlimeConfigurator Version 8.2 ({platform_name})",
     text_color="gray"
 )
 version_label.pack(anchor="ne", padx=10, pady=5)
