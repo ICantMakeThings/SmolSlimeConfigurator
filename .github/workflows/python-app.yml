@@ -2,62 +2,82 @@ name: Build SmolSlimeConfigurator
 
 on:
   push:
-    branches: ["main"]
+    branches: [main]
   pull_request:
-    branches: ["main"]
+    branches: [main]
+  workflow_dispatch:
+  release:
+    types: [published]
 
 jobs:
   build:
     strategy:
+      fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        include:
+          - os: ubuntu-latest
+            artifact: SmolSlime-Linux
+            executable: SmolSlimeConfigurator-Linux
+          - os: macos-latest
+            artifact: SmolSlime-macOS
+            executable: SmolSlimeConfigurator-macOS
+          - os: windows-latest
+            artifact: SmolSlime-Windows
+            executable: SmolSlimeConfigurator-Windows
     runs-on: ${{ matrix.os }}
 
     steps:
-      - name: Checkout repo
+      - name: Check out source
         uses: actions/checkout@v4
 
-      - name: Set up Python 3.10
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.10"
+          python-version: "3.11"
 
       - name: Install dependencies
         run: |
-          python -m venv venv
-          if [[ "${RUNNER_OS}" == "Windows" ]]; then
-            venv/Scripts/python -m pip install --upgrade pip
-            venv/Scripts/python -m pip install pyinstaller customtkinter pyserial requests nrfuitl
-          else
-            source venv/bin/activate
-            python -m pip install --upgrade pip
-            pip install pyinstaller customtkinter pyserial requests nrfutil
-          fi
-        shell: bash
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt pyinstaller
 
       - name: Build executable
-        run: |
-          if [[ "${RUNNER_OS}" == "Windows" ]]; then
-            venv/Scripts/python -m PyInstaller --onefile --windowed --icon=icon.ico \
-              --add-data "icon.ico;." \
-              --add-binary "bin/nrfutil.exe;." \
-              "./SmolSlimeConfiguratorV8-3-7.py"
-          elif [[ "${RUNNER_OS}" == "macOS" ]]; then
-            source venv/bin/activate
-            pyinstaller --onedir --windowed --icon=icon.icns \
-              --add-binary "bin/nrfutil:." \
-              "./SmolSlimeConfiguratorV8-3-7.py"
-          else
-            source venv/bin/activate
-            pyinstaller --onefile --windowed --icon=icon.png \
-              --add-data "icon.png:." \
-              --add-binary "bin/nrfutil:." \
-              "./SmolSlimeConfiguratorV8-3-7.py"
-          fi
         shell: bash
+        run: |
+          icon_args=()
+          if [[ "$RUNNER_OS" == "macOS" ]]; then
+            icon_args+=(--icon icon.icns)
+          fi
+          pyinstaller --noconfirm --clean --onefile --windowed \
+            --name ${{ matrix.executable }} \
+            --collect-all PySide6 \
+            --add-data "Main.qml${{ runner.os == 'Windows' && ';' || ':' }}." \
+            --add-data "ActionButton.qml${{ runner.os == 'Windows' && ';' || ':' }}." \
+            --add-data "icon.png${{ runner.os == 'Windows' && ';' || ':' }}." \
+            "${icon_args[@]}" \
+          SmolSlimeConfiguratorV10.py
 
-      - name: Upload artifacts
+      - name: Upload executable
         uses: actions/upload-artifact@v4
         with:
-          name: SmolSlime-${{ matrix.os }}
-          path: dist/*
+          name: ${{ matrix.artifact }}
+          path: dist/${{ matrix.executable }}*
+          if-no-files-found: error
+
+  publish-release:
+    if: github.event_name == 'release'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Download platform builds
+        uses: actions/download-artifact@v4
+        with:
+          pattern: SmolSlime-*
+          path: release-assets
+
+      - name: Attach builds to release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: release-assets/**/*

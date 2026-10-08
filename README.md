@@ -9,27 +9,32 @@ Pure Simple UI Configurator for SlimeVR Smol Slimes (Unofficial)
 - **Easy-to-use interface** — clean, modern, and simple to use & Helpful tooltips.
 - **Effortless configuration** — one-click buttons for calibration, pairing, and more.
 - **Automatic firmware updater** — just plug your tracker in via USB, select your firmware type, and flash the latest build instantly.
+- **Complete command set** — tracker and receiver commands are available without a separate advanced mode.
 - **Always up to date** — the firmware list automatically fetches the latest daily builds from GitHub.
 - **Custom firmware support** — flash your own `.uf2` or `.hex` files no problem.
 - **Favorites system** — star your most-used firmware versions by Right-Clicking (Middle-Clicking on Mac).
-- **Cross-platform** — available for **Windows**, **Linux**, **macOS**, and **Android**.
-- **Theme customization** — switch between **light/dark mode** and choose your favorite accent colour.
+- **Cross-platform desktop app** — available for **Windows**, **Linux**, and **macOS**.
+- **Color themes** — choose Light, Dark, Dark Blue, or Dark Green; Dark Green is the default.
+- **Cross-platform desktop UI** — built with PySide6 and Qt Quick/QML for Linux, macOS, and Windows.
 
 # Download
 There are 2 options to run the Configurator:
 - Single-file executables are available from [Releases](https://github.com/ICantMakeThings/SmolSlimeConfigurator/releases) (Windows, Linux, macOS, Android).
-- Python file from the uploaded files above.
-- To build it from source, run:
+- Run from source with Python 3.10 or newer:
 ```bash
-pyinstaller --onefile --windowed --icon=icon.png --add-data "icon.png:." --add-binary "/Location/To/UR/NameOfVenv/bin/nrfutil:." SmolSlimeConfiguratorV8.py
+python -m pip install -r requirements.txt
+python SmolSlimeConfiguratorV10.py
 ```
-*Note you NEED to use a venv, NEED to use python 3.10.xx & change the .png to .icns on mac and .ico on windows*
+
+GitHub Actions builds standalone desktop executables for Linux, macOS, and Windows on pushes and pull requests to `main`. Publishing a GitHub release also builds all three platforms and attaches their executables to the release.
+
+HEX firmware flashing uses Nordic's standalone `nrfutil` release. If it is not already found at `SMOLSLIME_NRFUTIL`, in the app bundle, or on `PATH`, the app downloads the platform-specific executable from Nordic's official GitHub release and stores it beside the user's SmolSlime `config.json`. The app logs command output when flashing fails.
 
 # Instructions
 **Note:** There is a [video tutorial](https://youtu.be/2PHelwy7Rcs) explaining general usage, and [this video](https://www.youtube.com/watch?v=ENINHh4L8tk) covers **Android usage** in detail.
 ## **First install**
 
-+ Plug in the tracker or reciever, hold one side of a wire on rst pin ![image](https://github.com/user-attachments/assets/7cdaae27-21f9-428f-9327-d39bbf8dabc2) (4th pin down from where B+ pin is)
++ Plug in the tracker or receiver, hold one side of a wire on rst pin ![image](https://github.com/user-attachments/assets/7cdaae27-21f9-428f-9327-d39bbf8dabc2) (4th pin down from where B+ pin is)
 and doubble tap gnd (usbc connector on the Nice!Nano)![image](https://github.com/user-attachments/assets/c1efbc20-bb2f-4fd8-9ecd-8869648ebf17)
 + Press "↻" refresh, then select the port from the dropdown menu on the left of the refresh button, then press "Connect"
 + Select the version of hardware from the dropdown menu called "Select Firmware", press "⬇ Firmware",  Wait ~20 seconds, the tracker will flash.
