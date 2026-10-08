@@ -698,7 +698,7 @@ ApplicationWindow {
                             }
                             Label {
                                 Layout.alignment: Qt.AlignRight
-                                text: "SmolSlimeConfigurator Version 10 (" + backend.platformName + ")"
+                                text: "SmolSlimeConfigurator Version 11 (" + backend.platformName + ")"
                                 color: muted
                                 font.pixelSize: 11
                             }
