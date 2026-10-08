@@ -132,7 +132,8 @@ ApplicationWindow {
             }
             ActionButton {
                 text: backend.connected ? "Disconnect" : "Connect"
-                Layout.preferredWidth: 132
+                Layout.minimumWidth: 152
+                Layout.preferredWidth: 152
                 Layout.preferredHeight: 40
                 fillColor: backend.connected ? themes.button : themes.action
                 labelColor: backend.connected ? themes.buttonText : themes.actionText
@@ -202,7 +203,7 @@ ApplicationWindow {
 
         StackLayout {
             Layout.fillWidth: true
-            Layout.fillHeight: true
+            Layout.fillHeight: false
             currentIndex: pageIndex
 
             // Buttons!
@@ -225,7 +226,7 @@ ApplicationWindow {
                             anchors.margins: 14
                             columns: 3
                             columnSpacing: 10
-                            rowSpacing: 10
+                            rowSpacing: 1
                             Repeater {
                                 model: [
                                     {label: "Info", cmd: "info"}, {label: "Reboot", cmd: "reboot"},
@@ -337,7 +338,7 @@ ApplicationWindow {
                             anchors.margins: 14
                             columns: 3
                             columnSpacing: 10
-                            rowSpacing: 10
+                            rowSpacing: 1
                             Repeater {
                                 model: [
                                     {label: "Info", cmd: "info"}, {label: "List trackers", cmd: "list"},
@@ -711,6 +712,8 @@ ApplicationWindow {
         Item {
             id: consolePanel
             Layout.fillWidth: true
+            Layout.fillHeight: true
+            Layout.minimumHeight: 150
             Layout.preferredHeight: 150
             Rectangle {
                 anchors.fill: parent

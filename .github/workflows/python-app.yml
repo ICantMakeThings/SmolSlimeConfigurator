@@ -56,11 +56,24 @@ jobs:
             "${icon_args[@]}" \
           SmolSlimeConfiguratorV10.py
 
+      - name: Package macOS app
+        if: runner.os == 'macOS'
+        run: ditto -c -k --sequesterRsrc --keepParent "dist/${{ matrix.executable }}.app" "dist/${{ matrix.executable }}.zip"
+
       - name: Upload executable
+        if: runner.os != 'macOS'
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.artifact }}
           path: dist/${{ matrix.executable }}*
+          if-no-files-found: error
+
+      - name: Upload macOS app archive
+        if: runner.os == 'macOS'
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact }}
+          path: dist/${{ matrix.executable }}.zip
           if-no-files-found: error
 
   publish-release:
