@@ -1,8 +1,9 @@
 # SmolSlimeConfigurator <img src="icon.png" width="32" height="32" alt="SmolSlimeConfiguratorICON">
 Pure Simple UI Configurator for SlimeVR Smol Slimes (Unofficial)
 
+<img width="971" height="740" alt="ssccc" src="https://github.com/user-attachments/assets/ae0daa2f-2a61-4123-9c6c-dc71ff90ffdf" />
 
-<img width="1316" height="539" alt="newyes" src="https://github.com/user-attachments/assets/ce07f8ac-0857-42c3-9a02-f86d84e19fcc" />
+
 
 # Features
 
@@ -30,7 +31,8 @@ GitHub Actions builds standalone desktop executables for Linux, macOS, and Windo
 
 HEX firmware flashing uses Nordic's standalone `nrfutil` release. If it is not already found at `SMOLSLIME_NRFUTIL`, in the app bundle, or on `PATH`, the app downloads the platform-specific executable from Nordic's official GitHub release and stores it beside the user's SmolSlime `config.json`. The app logs command output when flashing fails.
 
-# Instructions
+# Instructions![Uploading ssccc.png…]()
+
 **Note:** There is a [video tutorial](https://youtu.be/2PHelwy7Rcs) explaining general usage, and [this video](https://www.youtube.com/watch?v=ENINHh4L8tk) covers **Android usage** in detail.
 ## **First install**
 
